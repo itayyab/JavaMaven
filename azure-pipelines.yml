@@ -14,11 +14,15 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-#- task: SonarCloudPrepare@1
-#  inputs:
-#    SonarCloud: 'SonarCloud'
-#    organization: 'itayyab'
-#    scannerMode: 'Other'
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SCJavaMaven'
+    organization: 'itayyab'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'com.tayyab.javamaven'
+    cliProjectName: 'com.tayyab.javamaven'
+    cliSources: '.'
 
 - task: Cache@2
   inputs:
@@ -54,13 +58,9 @@ steps:
 #    checkStyleRunAnalysis: true
 #    pmdRunAnalysis: true
 #    findBugsRunAnalysis: true
-#- task: SonarCloudPublish@1
-#  inputs:
-#    pollingTimeoutSec: '300'
-## - task: SonarQubePublish@4
-##   inputs:
-##     pollingTimeoutSec: '300'
-#- task: PublishCodeCoverageResults@1
-#  inputs:
-#    summaryFileLocation: '**/CCReport43F6D5EF/jacoco.xml'
+- task: SonarCloudAnalyze@1
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
 
