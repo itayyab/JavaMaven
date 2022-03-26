@@ -1,0 +1,66 @@
+# Maven
+
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+variables:
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+#- task: SonarCloudPrepare@1
+#  inputs:
+#    SonarCloud: 'SonarCloud'
+#    organization: 'itayyab'
+#    scannerMode: 'Other'
+
+- task: Cache@2
+  inputs:
+    key: 'maven | "$(Agent.OS)" | **/pom.xml'
+    restoreKeys: |
+      maven | "$(Agent.OS)"
+      maven
+    path: $(MAVEN_CACHE_FOLDER)
+  displayName: Cache Maven local repo
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean install'
+#    options: '-X'
+    mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+#- task: Maven@3
+#  inputs:
+#    mavenPomFile: 'pom.xml'
+#    goals: 'package deploy'
+##    options: '-X'
+#    publishJUnitResults: true
+#    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+#    codeCoverageToolOption: 'JaCoCo'
+#    javaHomeOption: 'JDKVersion'
+#    jdkVersionOption: '1.11'
+#    mavenVersionOption: 'Default'
+#    mavenOptions: '-Xmx3072m'
+#    mavenAuthenticateFeed: true
+#    effectivePomSkip: false
+#    sonarQubeRunAnalysis: true
+#    isJacocoCoverageReportXML: true
+#    sqMavenPluginVersionChoice: 'latest'
+#    checkStyleRunAnalysis: true
+#    pmdRunAnalysis: true
+#    findBugsRunAnalysis: true
+#- task: SonarCloudPublish@1
+#  inputs:
+#    pollingTimeoutSec: '300'
+## - task: SonarQubePublish@4
+##   inputs:
+##     pollingTimeoutSec: '300'
+#- task: PublishCodeCoverageResults@1
+#  inputs:
+#    summaryFileLocation: '**/CCReport43F6D5EF/jacoco.xml'
+
